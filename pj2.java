@@ -24,6 +24,10 @@ public class pj2
         S[high] = temp;
         return i; 
     }
+    public static int partition2(int S[], int low, int high, int x)
+    {
+        
+    }
     public static int kthSmalllest(int S[], int low, int high, int k)
     {
         if(k > 0 && k <= high - low + 1)
@@ -37,7 +41,7 @@ public class pj2
         return Integer.MAX_VALUE;
 
     }
-    void merge (int[] S,int low, int mid, int high)
+    static void merge (int[] S,int low, int mid, int high)
     {
         int n1 = mid - low + 1;
         int n2 = high - mid; 
@@ -82,7 +86,7 @@ public class pj2
             k++;
         } 
     }
-    void sort(int[] S, int low, int high)
+    static void sort(int[] S, int low, int high)
     {
         if (low < high)
         {
@@ -91,5 +95,36 @@ public class pj2
             sort(S,m+1,high);
             merge(S, low, m, high);
         }
+    }
+    static int findMedian(int S[], int i, int j)
+    {
+        Arrays.sort(S, i , j);
+        return S[i+(j-1)/2];
+    }
+    public static int kthSmalllestfifty(int S[], int low, int high, int k)
+    {
+        int n = S.length;
+        if(n < 50)
+        {
+            sort(S, low, high);
+            return S[0];
+
+        }
+        if(k > 0 && k <= high - low + 1)
+        {
+            n = high - low +1;
+            int i; 
+            int median[] = new int[(n+4)/5];
+            for(i = 0; i < n/5; i++)
+            {
+                median[i] = findMedian(S, low + i*5, low + i *5+5);
+            }
+            if(i*5 < n)
+            {
+                median[i] = findMedian(S, low+i*5 , low+i*5+n%5);
+                i++;
+            }
+        }
+        return 0;
     }
 }
