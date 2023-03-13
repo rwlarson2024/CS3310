@@ -3,7 +3,27 @@ public class pj2
 {
     public static void main (String[] args)
     {
+        Scanner keyboard = new Scanner(System.in);
+        System.out.println("Enter a value for n");
+        int n = keyboard.nextInt();
+        System.out.println("Enter a value for the kth smallest value");
+        int k = keyboard.nextInt();
+        int[] array = RandomNumberGenerator(n);
+        int low = 0;
+        int high = array.length;
+        System.out.println("K'th smallest element is: " + kthSmalllestfifty(array, low, high, k));
+
         
+    }
+    public static int [] RandomNumberGenerator (int n)
+    {
+        int[] array = new int[n];
+        Random random = new Random();
+        for(int i = 0; i < array.length; i++)
+        {
+            array[i] = random.nextInt(100);
+        }
+        return array;
     }
     public static int partition(int[] S, int low, int high)
     {
@@ -24,9 +44,28 @@ public class pj2
         S[high] = temp;
         return i; 
     }
+    //searches array for value x and patitions array around the value x
     public static int partition2(int S[], int low, int high, int x)
     {
-        
+        int i;
+        for(i = low; i < high; i++)
+        {
+             if(S[i] == x)
+             break; 
+        }
+        swap(S, i, high);
+        i = low;
+        for(int j = low; j<= high-1;j++)
+        {
+            if(S[j]<=x)
+            {
+                swap(S,i,j);
+                i++;
+            }
+        }
+        swap(S,i,high);
+        return i;
+    
     }
     public static int kthSmalllest(int S[], int low, int high, int k)
     {
@@ -96,6 +135,13 @@ public class pj2
             merge(S, low, m, high);
         }
     }
+    static int[] swap(int[] S, int i, int j)
+    {
+        int temp = S[i];
+        S[i] = S[j];
+        S[j] = temp;
+        return S;
+    }
     static int findMedian(int S[], int i, int j)
     {
         Arrays.sort(S, i , j);
@@ -124,7 +170,20 @@ public class pj2
                 median[i] = findMedian(S, low+i*5 , low+i*5+n%5);
                 i++;
             }
+            //find median of all the medians recursively 
+            //if there is only one value return the value.
+
+            int medianofMedian = (i==1)? median[i-1]:
+                                    kthSmalllestfifty(median, 0,i-1,i/2);
+            int pos = partition2(S, low, high, medianofMedian);
+
+            if(pos -low == k-1)
+                return S[pos];
+            //recur for left array
+            if(pos - low > k -1 )
+                return kthSmalllestfifty(S, low, pos-1, k);
+            return kthSmalllestfifty(S, pos +1, high, k - pos +low -1);
         }
-        return 0;
+        return Integer.MAX_VALUE;
     }
 }
